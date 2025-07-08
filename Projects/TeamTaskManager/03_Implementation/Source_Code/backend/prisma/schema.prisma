@@ -1,0 +1,352 @@
+// Team Task Manager - Database Schema
+// Sprint 2: Task and Project Management
+// Updated: July 7, 2025
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User Management
+model User {
+  id                        String    @id @default(cuid())
+  email                     String    @unique
+  passwordHash              String    @map("password_hash")
+  firstName                 String    @map("first_name")
+  lastName                  String    @map("last_name")
+  profilePictureUrl         String?   @map("profile_picture_url")
+  
+  // Email verification
+  emailVerified             Boolean   @default(false) @map("email_verified")
+  verificationToken         String?   @map("verification_token")
+  verificationTokenExpires  DateTime? @map("verification_token_expires")
+  
+  // Password reset
+  resetToken                String?   @map("reset_token")
+  resetTokenExpires         DateTime? @map("reset_token_expires")
+  passwordChangedAt         DateTime? @map("password_changed_at")
+  
+  // Authentication tracking
+  lastLogin                 DateTime? @map("last_login")
+  failedLoginAttempts       Int       @default(0) @map("failed_login_attempts")
+  lockedUntil               DateTime? @map("locked_until")
+  
+  // Timestamps
+  createdAt                 DateTime  @default(now()) @map("created_at")
+  updatedAt                 DateTime  @updatedAt @map("updated_at")
+  
+  // Relations
+  sessions                  UserSession[]
+  userRoles                 UserRole[]
+  passwordResetRequests     PasswordResetRequest[]
+  
+  // Task and Project Relations
+  assignedTasks             Task[]      @relation("AssignedTo")
+  createdTasks              Task[]      @relation("CreatedBy")
+  ownedProjects             Project[]   @relation("ProjectOwner")
+  projectMemberships        ProjectMember[]
+  projectInvites            ProjectInvite[] @relation("InvitedUser")
+  invitedProjectInvites     ProjectInvite[] @relation("InvitedBy")
+  uploadedAttachments       TaskAttachment[]
+  comments                  TaskComment[]
+  timeEntries               TimeEntry[]
+
+  @@map("users")
+}
+
+// Session Management
+model UserSession {
+  id                String    @id @default(cuid())
+  userId            String    @map("user_id")
+  sessionToken      String    @unique @map("session_token")
+  refreshToken      String    @unique @map("refresh_token")
+  
+  // Session metadata
+  ipAddress         String?   @map("ip_address")
+  userAgent         String?   @map("user_agent")
+  deviceInfo        Json?     @map("device_info")
+  locationInfo      Json?     @map("location_info")
+  
+  // Token expiration
+  accessTokenExpires  DateTime @map("access_token_expires")
+  refreshTokenExpires DateTime @map("refresh_token_expires")
+  tokenRefreshedAt    DateTime? @map("token_refreshed_at")
+  
+  // Session status
+  isActive          Boolean   @default(true) @map("is_active")
+  lastActivity      DateTime  @default(now()) @map("last_activity")
+  expiresAt         DateTime  @map("expires_at")
+  
+  // Timestamps
+  createdAt         DateTime  @default(now()) @map("created_at")
+  
+  // Relations
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("user_sessions")
+}
+
+// Role-Based Access Control
+model Role {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  permissions Json     // JSON array of permissions
+  
+  // Timestamps
+  createdAt   DateTime @default(now()) @map("created_at")
+  
+  // Relations
+  userRoles   UserRole[]
+  
+  @@map("roles")
+}
+
+model UserRole {
+  id        String  @id @default(cuid())
+  userId    String  @map("user_id")
+  roleId    String  @map("role_id")
+  
+  // Role scope (global, organization, project)
+  scope     String  // 'global', 'organization', 'project'
+  scopeId   String? @map("scope_id") // organization_id or project_id
+  
+  // Assignment metadata
+  assignedBy String? @map("assigned_by")
+  assignedAt DateTime @default(now()) @map("assigned_at")
+  
+  // Relations
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role      Role    @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, roleId, scope, scopeId])
+  @@map("user_roles")
+}
+
+// Permission System
+model Permission {
+  id          String @id @default(cuid())
+  resource    String // 'users', 'projects', 'tasks', etc.
+  action      String // 'create', 'read', 'update', 'delete'
+  description String?
+  
+  @@unique([resource, action])
+  @@map("permissions")
+}
+
+// Password Reset Tracking
+model PasswordResetRequest {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  token     String   @unique
+  expiresAt DateTime @map("expires_at")
+  used      Boolean  @default(false)
+  
+  // Request metadata
+  ipAddress String?  @map("ip_address")
+  userAgent String?  @map("user_agent")
+  
+  // Timestamps
+  createdAt DateTime @default(now()) @map("created_at")
+  
+  // Relations
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("password_reset_requests")
+}
+
+// Token Blacklist (for logout/security)
+model TokenBlacklist {
+  id        String   @id @default(cuid())
+  tokenHash String   @unique @map("token_hash")
+  expiresAt DateTime @map("expires_at")
+  reason    String?  // 'logout', 'security', 'expired'
+  
+  // Timestamps
+  createdAt DateTime @default(now()) @map("created_at")
+  
+  @@map("token_blacklist")
+}
+
+// Audit Log (for security events)
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String?  @map("user_id")
+  action    String   // 'login', 'logout', 'register', 'password_reset', etc.
+  resource  String?  // Resource affected
+  details   Json?    // Additional details
+  severity  String?  // 'INFO', 'WARNING', 'ERROR', 'CRITICAL'
+  
+  // Request metadata
+  ipAddress String?  @map("ip_address")
+  userAgent String?  @map("user_agent")
+  
+  // Timestamps
+  createdAt DateTime @default(now()) @map("created_at")
+  
+  @@map("audit_logs")
+}
+
+// Enums
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum ProjectStatus {
+  ACTIVE
+  ON_HOLD
+  COMPLETED
+  CANCELLED
+}
+
+enum ProjectRole {
+  OWNER
+  ADMIN
+  MEMBER
+  VIEWER
+}
+
+enum InviteStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+  EXPIRED
+}
+
+// Task Management
+model Task {
+  id            String       @id @default(cuid())
+  title         String
+  description   String?
+  status        TaskStatus   @default(TODO)
+  priority      TaskPriority @default(MEDIUM)
+  dueDate       DateTime?
+  
+  // Relations
+  assigneeId    String?
+  assignee      User?        @relation("AssignedTo", fields: [assigneeId], references: [id])
+  projectId     String?
+  project       Project?     @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdById   String
+  createdBy     User         @relation("CreatedBy", fields: [createdById], references: [id])
+  attachments   TaskAttachment[]
+  comments      TaskComment[]
+  timeEntries   TimeEntry[]
+
+  // Timestamps
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  @@index([projectId])
+}
+
+// Project Management
+model Project {
+  id            String        @id @default(cuid())
+  name          String
+  description   String?
+  status        ProjectStatus @default(ACTIVE)
+  startDate     DateTime?
+  endDate       DateTime?
+  tags          String[]      @default([]) // New field for tags
+  
+  // Relations
+  ownerId       String
+  owner         User          @relation("ProjectOwner", fields: [ownerId], references: [id])
+  tasks         Task[]
+  members       ProjectMember[]
+  invites       ProjectInvite[]
+
+  // Timestamps
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@index([ownerId])
+}
+
+model ProjectMember {
+  id            String      @id @default(cuid())
+  projectId     String
+  project       Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  userId        String
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role          ProjectRole @default(MEMBER)
+  joinedAt      DateTime    @default(now())
+
+  @@unique([projectId, userId])
+}
+
+model ProjectInvite {
+  id            String      @id @default(cuid())
+  projectId     String
+  project       Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  email         String      // Email of the invited user
+  userId        String?     // Optional: if user already exists
+  invitedUser   User?       @relation("InvitedUser", fields: [userId], references: [id])
+  role          ProjectRole @default(MEMBER)
+  status        InviteStatus @default(PENDING)
+  invitedById   String
+  invitedBy     User        @relation("InvitedBy", fields: [invitedById], references: [id])
+  invitedAt     DateTime    @default(now())
+  expiresAt     DateTime?
+
+  @@unique([projectId, email])
+}
+
+model TaskAttachment {
+  id            String    @id @default(cuid())
+  taskId        String
+  task          Task      @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  fileName      String
+  fileSize      Int
+  fileType      String
+  fileUrl       String
+  uploadedById  String
+  uploadedBy    User      @relation(fields: [uploadedById], references: [id])
+  uploadedAt    DateTime  @default(now())
+
+  @@index([taskId])
+}
+
+model TaskComment {
+  id            String    @id @default(cuid())
+  taskId        String
+  task          Task      @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  content       String
+  authorId      String
+  author        User      @relation(fields: [authorId], references: [id])
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([taskId])
+}
+
+model TimeEntry {
+  id            String    @id @default(cuid())
+  taskId        String
+  task          Task      @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  userId        String
+  user          User      @relation(fields: [userId], references: [id])
+  description   String?
+  startTime     DateTime
+  endTime       DateTime?
+  duration      Int?      // Duration in minutes
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([taskId, userId])
+}
