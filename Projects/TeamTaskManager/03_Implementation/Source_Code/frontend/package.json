@@ -1,175 +1,36 @@
 {
-  "name": "team-task-manager-frontend",
-  "version": "1.0.0",
-  "description": "Team Task Manager Frontend - React Application",
+  "name": "frontend",
+  "version": "0.1.0",
   "private": true,
-  "homepage": ".",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "lint": "eslint src --ext .ts,.tsx",
-    "lint:fix": "eslint src --ext .ts,.tsx --fix",
-    "type-check": "tsc --noEmit",
-    "format": "prettier --write src/**/*.{ts,tsx,js,jsx,json,css,md}",
-    "test:coverage": "react-scripts test --coverage --watchAll=false",
-    "test:ci": "CI=true react-scripts test --coverage --watchAll=false",
-    "analyze": "npm run build && npx source-map-explorer 'build/static/js/*.js'",
-    "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
   "dependencies": {
-    "@emotion/react": "^11.11.1",
-    "@emotion/styled": "^11.11.0",
-    "@mui/icons-material": "^5.14.19",
-    "@mui/material": "^5.14.20",
-    "@mui/x-date-pickers": "^8.7.0",
-    "@reduxjs/toolkit": "^1.9.7",
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
-    "@types/jest": "^27.5.2",
-    "@types/node": "^18.19.3",
-    "@types/react": "^18.2.45",
-    "@types/react-dom": "^18.2.18",
-    "axios": "^1.6.2",
-    "date-fns": "^4.1.0",
-    "formik": "^2.4.5",
-    "js-cookie": "^3.0.5",
-    "jwt-decode": "^4.0.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-redux": "^8.1.3",
-    "react-router-dom": "^6.20.1",
-    "react-scripts": "5.0.1",
-    "redux-persist": "^6.0.0",
-    "tsconfig-paths": "^4.2.0",
-    "typescript": "^4.9.5",
-    "web-vitals": "^2.1.4",
-    "yup": "^1.3.3"
+    "@apollo/client": "^3.13.8",
+    "@radix-ui/react-slot": "^1.2.3",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "graphql": "^16.11.0",
+    "lucide-react": "^0.525.0",
+    "next": "15.3.5",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tailwind-merge": "^3.3.1",
+    "zustand": "^5.0.6"
   },
   "devDependencies": {
-    "@storybook/addon-essentials": "^7.6.0",
-    "@storybook/addon-interactions": "^7.6.0",
-    "@storybook/addon-links": "^7.6.0",
-    "@storybook/addon-onboarding": "^1.0.8",
-    "@storybook/blocks": "^7.6.0",
-    "@storybook/preset-create-react-app": "^7.6.0",
-    "@storybook/react": "^7.6.0",
-    "@storybook/react-webpack5": "^7.6.0",
-    "@storybook/testing-library": "^0.2.2",
-    "@testing-library/jest-dom": "^6.1.5",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^14.5.1",
-    "@types/jest": "^29.5.8",
-    "@types/js-cookie": "^3.0.6",
-    "@types/lodash": "^4.14.202",
-    "@types/node": "^18.19.3",
-    "@types/react": "^18.2.37",
-    "@types/react-dom": "^18.2.15",
-    "@types/uuid": "^9.0.7",
-    "@typescript-eslint/eslint-plugin": "^6.12.0",
-    "@typescript-eslint/parser": "^6.12.0",
-    "cypress": "^13.6.0",
-    "eslint": "^8.55.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-config-react-app": "^7.0.1",
-    "eslint-plugin-import": "^2.29.0",
-    "eslint-plugin-jsx-a11y": "^6.8.0",
-    "eslint-plugin-prettier": "^5.0.1",
-    "eslint-plugin-react": "^7.33.2",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "husky": "^8.0.3",
-    "lint-staged": "^15.1.0",
-    "msw": "^2.0.8",
-    "prettier": "^3.1.1",
-    "prop-types": "^15.8.1",
-    "start-server-and-test": "^2.0.3",
-    "webpack": "^5.89.0"
-  },
-  "engines": {
-    "node": ">=18.0.0",
-    "npm": ">=9.0.0"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "prettier": {
-    "semi": true,
-    "trailingComma": "es5",
-    "singleQuote": true,
-    "printWidth": 80,
-    "tabWidth": 2,
-    "useTabs": false
-  },
-  "lint-staged": {
-    "src/**/*.{js,jsx,ts,tsx}": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "src/**/*.{json,css,md}": [
-      "prettier --write"
-    ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged",
-      "pre-push": "npm run test:ci"
-    }
-  },
-  "jest": {
-    "collectCoverageFrom": [
-      "src/**/*.{js,jsx,ts,tsx}",
-      "!src/**/*.d.ts",
-      "!src/index.tsx",
-      "!src/serviceWorker.ts",
-      "!src/setupTests.ts",
-      "!src/stories/**",
-      "!src/**/*.stories.{js,jsx,ts,tsx}"
-    ],
-    "coverageThreshold": {
-      "global": {
-        "branches": 80,
-        "functions": 80,
-        "lines": 80,
-        "statements": 80
-      }
-    }
-  },
-  "proxy": "http://localhost:3001",
-  "keywords": [
-    "react",
-    "typescript",
-    "authentication",
-    "task-manager",
-    "team-collaboration",
-    "jwt",
-    "material-ui",
-    "redux-toolkit"
-  ],
-  "author": "Team Task Manager Development Team",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/teamtaskmanager/frontend.git"
-  },
-  "bugs": {
-    "url": "https://github.com/teamtaskmanager/frontend/issues"
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "15.3.5",
+    "tailwindcss": "^4",
+    "tw-animate-css": "^1.3.5",
+    "typescript": "^5"
   }
 }

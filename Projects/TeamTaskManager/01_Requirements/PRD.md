@@ -209,30 +209,27 @@ The Team Task Manager is a collaborative web application designed to streamline 
 ## 7. Technical Considerations
 
 ### Frontend Technology Stack
-- **Framework:** React 18+ with TypeScript
-- **State Management:** Redux Toolkit or Zustand
-- **UI Components:** Material-UI or Tailwind CSS
-- **Real-time:** Socket.io client
+- **Framework:** Next.js with TypeScript
+- **State Management:** Zustand or React Query
+- **UI Components:** Shadcn UI with Lucid Icons
+- **API Client:** Apollo Client for GraphQL
 - **Testing:** Jest, React Testing Library, Cypress
 
 ### Backend Technology Stack
-- **Runtime:** Node.js with Express.js
-- **Database:** PostgreSQL with Prisma ORM
-- **Authentication:** JWT with bcrypt
-- **Real-time:** Socket.io server
+- **API:** GraphQL with Apollo Server
+- **Database:** Supabase with PostgreSQL and Prisma
+- **Authentication:** Supabase Auth
+- **Real-time:** Supabase Realtime
 - **Testing:** Jest, Supertest
-- **API Documentation:** Swagger/OpenAPI
 
 ### Infrastructure
-- **Hosting:** AWS/Google Cloud/Azure
-- **Database:** Managed PostgreSQL service
-- **CDN:** CloudFront or equivalent
-- **Monitoring:** Application Performance Monitoring (APM)
-- **CI/CD:** GitHub Actions or GitLab CI
+- **Hosting:** Vercel/Netlify for frontend, Supabase for backend
+- **Database:** Managed PostgreSQL via Supabase
+- **CI/CD:** GitHub Actions
 
 ## 8. Change Log
 
 | Change | Date | Version | Description | Author |
 | ------ | ---- | ------- | ----------- | ------ |
 | Initial Draft | 2025-07-05  | 1.0 | Complete PRD creation with all functional and non-functional requirements | Business Analyst Agent |
-| Requirements Review | 2025-07-05  | 1.1 | Added technical considerations and success metrics | Business Analyst Agent | 
+| Requirements Review | 2025-07-05  | 1.1 | Added technical considerations and success metrics | Business Analyst Agent |
