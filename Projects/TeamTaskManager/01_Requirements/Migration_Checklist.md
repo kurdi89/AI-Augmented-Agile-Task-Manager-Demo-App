@@ -18,19 +18,19 @@ This checklist outlines the tasks required to migrate the Team Task Manager appl
 - [x] Configure Supabase Auth.
 - [x] Introspect the existing PostgreSQL database with Prisma.
 - [x] Create a new `schema.prisma` file.
-- [x] Build the GraphQL API with Apollo Server and Prisma.
-- [ ] Implement all GraphQL resolvers and services.
-- [ ] Port all existing business logic to the new GraphQL API.
+- [x] Build the REST API with Express and Prisma.
+- [ ] Implement all REST API endpoints and services.
+- [ ] Port all existing business logic to the new REST API.
 - [ ] Set up Supabase Realtime for live updates.
 
 ### Sub-Phase 2.2: Frontend Migration
 
 - [x] Create a new Next.js project with TypeScript.
 - [x] Install and configure Shadcn UI and Lucid Icons.
-- [x] Install and configure Apollo Client.
+- [x] Install and configure Axios.
 - [ ] Create a new component library with Shadcn UI.
 - [ ] Re-implement all existing React components in Next.js.
-- [ ] Connect the frontend to the GraphQL API with Apollo Client.
+- [ ] Connect the frontend to the REST API with Axios.
 - [ ] Implement real-time updates with Supabase Realtime.
 - [ ] Replace the existing state management solution with Zustand or React Query.
 

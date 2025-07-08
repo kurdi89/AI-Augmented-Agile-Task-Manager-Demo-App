@@ -1,34 +1,25 @@
-"use client";
-
-import { Button } from "@/components/ui/button";
-import { useQuery, gql } from "@apollo/client";
-
-const GET_USERS = gql`
-  query GetUsers {
-    users {
-      id
-      name
-      email
-    }
-  }
-`;
+import Link from 'next/link';
 
 export default function Home() {
-  const { loading, error, data } = useQuery(GET_USERS);
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
-
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-24">
-      <h1 className="text-4xl font-bold">Users</h1>
-      <ul className="mt-4">
-        {data.users.map((user: any) => (
-          <li key={user.id}>
-            {user.name} ({user.email})
+      <h1 className="text-4xl font-bold">Home Page</h1>
+      <nav className="mt-4">
+        <ul className="flex space-x-4">
+          <li>
+            <Link href="/auth/login">Login</Link>
           </li>
-        ))}
-      </ul>
+          <li>
+            <Link href="/auth/signup">Signup</Link>
+          </li>
+          <li>
+            <Link href="/auth/reset-password">Reset Password</Link>
+          </li>
+          <li>
+            <Link href="/dashboard">Dashboard</Link>
+          </li>
+        </ul>
+      </nav>
     </main>
   );
 }

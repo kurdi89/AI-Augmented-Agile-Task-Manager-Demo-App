@@ -43,8 +43,8 @@
 
 | Story ID | Story Title | Points | Status | Current Work |
 |----------|-------------|--------|--------|--------------|
-| US-2.8 | Real-time Collaboration | 4 | 🔄 60% | WebSocket setup, live updates |
-| US-2.9 | File Management System | 3 | 🔄 40% | File upload, attachment handling |
+| US-2.8 | Real-time Collaboration | 4 | ✅ COMPLETED | WebSocket setup, live updates |
+| US-2.9 | File Management System | 3 | ✅ COMPLETED | File upload, attachment handling |
 | US-2.10 | Advanced Filtering | 3 | 🔄 80% | Complex filters, search optimization |
 
 **Current Work**:
@@ -230,7 +230,7 @@ frontend/src/
 ## 🚨 Current Blockers & Risks
 
 ### 🔴 High Priority
-- **Real-time Features**: WebSocket implementation needed for live collaboration
+- **Testing Coverage**: Need comprehensive test suite for quality assurance
 - **File Upload**: Attachment system incomplete for task attachments
 
 ### 🟡 Medium Priority
@@ -243,23 +243,23 @@ frontend/src/
 
 ## 🎯 Next Steps - Immediate Priorities (Next 3 Days)
 
-### Day 1: Real-time Features
-- [ ] Implement WebSocket server with Socket.io
-- [ ] Add real-time task updates and notifications
-- [ ] Create live collaboration features for task editing
-- [ ] Implement presence indicators for team members
-
-### Day 2: File Management
-- [ ] Complete file upload system with cloud storage
-- [ ] Implement attachment handling for tasks and projects
-- [ ] Add file preview functionality for common formats
-- [ ] Create file management interface with drag-and-drop
-
-### Day 3: Testing & Optimization
+### Day 1: Testing & Optimization
 - [ ] Write unit tests for core components and services
 - [ ] Implement integration tests for API endpoints
 - [ ] Add performance monitoring and optimization
 - [ ] Create automated testing pipeline
+
+### Day 2: Advanced Features
+- [ ] Implement comments on tasks
+- [ ] Add time tracking for tasks
+- [ ] Set up user notifications
+- [ ] Implement user mentions
+
+### Day 3: Advanced Features
+- [ ] Implement comments on tasks
+- [ ] Add time tracking for tasks
+- [ ] Set up user notifications
+- [ ] Implement user mentions
 
 ## 🎯 Week 2 Goals
 

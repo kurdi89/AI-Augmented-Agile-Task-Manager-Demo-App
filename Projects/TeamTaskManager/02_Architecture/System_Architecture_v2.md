@@ -24,7 +24,7 @@ The updated Team Task Manager will leverage a modern, serverless architecture to
 │  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐                │
 │  │  PostgreSQL DB  │  │  Supabase Auth  │  │ Supabase Storage│                │
 │  ├─────────────────┤  ├─────────────────┤  ├─────────────────┤                │
-│  │   GraphQL API   │  │Supabase Realtime│  │      ...        │                │
+│  │    REST API     │  │Supabase Realtime│  │      ...        │                │
 │  └─────────────────┘  └─────────────────┘  └─────────────────┘                │
 └─────────────────────────────────────────────────────────────────────────────────┘
 ```
@@ -43,22 +43,22 @@ The updated Team Task Manager will leverage a modern, serverless architecture to
 - **Authentication**: Supabase Auth for user management and authentication.
 - **Storage**: Supabase Storage for file uploads.
 - **Real-time**: Supabase Realtime for live updates.
-- **API**: GraphQL API built with Apollo Server, running as a serverless function.
+- **API**: REST API built with Express, running as a serverless function.
 
 ## 3. Frontend Architecture
 
 - **Framework**: Next.js with TypeScript
 - **UI Components**: Shadcn UI with Lucid Icons
 - **State Management**: Zustand or React Query for managing application state.
-- **Data Fetching**: Apollo Client for interacting with the GraphQL API.
+- **Data Fetching**: Axios or Fetch for interacting with the REST API.
 - **Styling**: Tailwind CSS for utility-first styling.
 
 ## 4. Backend Architecture
 
-- **API**: GraphQL API built with Apollo Server.
+- **API**: REST API built with Express.
 - **Database ORM**: Prisma for interacting with the PostgreSQL database.
-- **Authentication**: Supabase Auth for JWT-based authentication.
-- **Business Logic**: Encapsulated in GraphQL resolvers and services.
+- **Authentication**: JWT-based authentication.
+- **Business Logic**: Encapsulated in Express controllers and services.
 
 ## 5. Data Schema
 
@@ -69,4 +69,4 @@ The existing PostgreSQL schema will be introspected and managed by Prisma. The `
 - **Provider**: GitHub Actions
 - **Workflow**:
   - On push to `main`, the pipeline will run tests, linting, and security scans.
-  - If all checks pass, the frontend will be deployed to Vercel/Netlify and the backend (GraphQL API) will be deployed as a serverless function.
+  - If all checks pass, the frontend will be deployed to Vercel/Netlify and the backend (REST API) will be deployed as a serverless function.

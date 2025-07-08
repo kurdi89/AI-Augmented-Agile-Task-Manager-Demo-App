@@ -223,7 +223,7 @@ model users {
   failed_login_attempts                          Int                       @default(0)
   locked_until                                   DateTime?
   created_at                                     DateTime                  @default(now())
-  updated_at                                     DateTime
+  updated_at                                     DateTime                  @updatedAt
   Project                                        Project[]
   ProjectInvite_ProjectInvite_invitedByIdTousers ProjectInvite[]           @relation("ProjectInvite_invitedByIdTousers")
   ProjectInvite_ProjectInvite_userIdTousers      ProjectInvite[]           @relation("ProjectInvite_userIdTousers")
