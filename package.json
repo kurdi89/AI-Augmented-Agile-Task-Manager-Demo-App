@@ -1,13 +1,23 @@
 {
-  "name": "task-manager",
+  "name": "team-task-manager",
   "version": "1.0.0",
-  "description": "",
+  "description": "A comprehensive task and project management application with real-time collaboration features",
   "main": "index.js",
   "scripts": {
     "dev": "concurrently \"npm --prefix Projects/TeamTaskManager/03_Implementation/Source_Code/backend start\" \"npm --prefix Projects/TeamTaskManager/03_Implementation/Source_Code/frontend run dev\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "backend": "npm --prefix Projects/TeamTaskManager/03_Implementation/Source_Code/backend start",
+    "frontend": "npm --prefix Projects/TeamTaskManager/03_Implementation/Source_Code/frontend run dev",
+    "build": "npm --prefix Projects/TeamTaskManager/03_Implementation/Source_Code/frontend run build",
+    "test": "npm --prefix Projects/TeamTaskManager/03_Implementation/Source_Code/frontend run test",
+    "lint": "npm --prefix Projects/TeamTaskManager/03_Implementation/Source_Code/frontend run lint",
+    "db:generate": "npm --prefix Projects/TeamTaskManager/03_Implementation/Source_Code/backend run prisma:generate",
+    "db:migrate": "npm --prefix Projects/TeamTaskManager/03_Implementation/Source_Code/backend run prisma:migrate",
+    "db:studio": "npm --prefix Projects/TeamTaskManager/03_Implementation/Source_Code/backend run prisma:studio"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "keywords": ["task-management", "project-management", "real-time", "collaboration", "react", "express", "typescript"],
+  "author": "Team Task Manager Development Team",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
 }

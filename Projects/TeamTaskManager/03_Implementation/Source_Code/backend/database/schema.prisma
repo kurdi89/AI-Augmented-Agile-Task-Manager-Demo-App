@@ -11,7 +11,7 @@ datasource db {
   url      = "file:./dev.db"
 }
 
-model User {
+model users {
   id            String   @id @default(uuid())
   email         String   @unique
   password_hash String
@@ -21,18 +21,17 @@ model User {
   updated_at    DateTime @updatedAt
 
   // Relations
-  created_tasks     Task[]        @relation("created_tasks")
-  assigned_tasks    Task[]        @relation("assigned_tasks")
+  created_tasks     Task[]
+  assigned_tasks    Task[]
   project_members   ProjectMember[]
-  project_invites   ProjectInvite[] @relation("invited_user")
-  sent_invites      ProjectInvite[] @relation("invite_sender")
+  project_invites   ProjectInvite[]
   uploaded_files    TaskAttachment[]
   task_comments     TaskComment[]
   time_entries      TimeEntry[]
-  owned_projects    Project[]     @relation("owned_projects")
+  owned_projects    Project[]
 }
 
-model Project {
+model project {
   id          String        @id @default(uuid())
   name        String
   description String?
@@ -45,13 +44,13 @@ model Project {
   updated_at  DateTime      @updatedAt
 
   // Relations
-  owner       User            @relation("owned_projects", fields: [owner_id], references: [id])
+  owner       users            @relation(fields: [owner_id], references: [id])
   members     ProjectMember[]
   invites     ProjectInvite[]
   tasks       Task[]
 }
 
-model ProjectMember {
+model project_member {
   id         String      @id @default(uuid())
   project_id String
   user_id    String
@@ -59,13 +58,13 @@ model ProjectMember {
   joined_at  DateTime    @default(now())
 
   // Relations
-  project Project @relation(fields: [project_id], references: [id])
-  user    User    @relation(fields: [user_id], references: [id])
+  project project @relation(fields: [project_id], references: [id])
+  user    users   @relation(fields: [user_id], references: [id])
 
   @@unique([project_id, user_id])
 }
 
-model ProjectInvite {
+model project_invite {
   id           String       @id @default(uuid())
   project_id   String
   email        String
@@ -77,12 +76,12 @@ model ProjectInvite {
   expires_at   DateTime?
 
   // Relations
-  project    Project @relation(fields: [project_id], references: [id])
-  user       User?   @relation("invited_user", fields: [user_id], references: [id])
-  inviter    User    @relation("invite_sender", fields: [invited_by], references: [id])
+  project    project @relation(fields: [project_id], references: [id])
+  user       users?  @relation(fields: [user_id], references: [id])
+  inviter    users   @relation(fields: [invited_by], references: [id])
 }
 
-model Task {
+model task {
   id            String      @id @default(uuid())
   title         String
   description   String?
@@ -96,15 +95,15 @@ model Task {
   updated_at    DateTime    @updatedAt
 
   // Relations
-  assignee      User?           @relation("assigned_tasks", fields: [assignee_id], references: [id])
-  creator       User            @relation("created_tasks", fields: [created_by], references: [id])
-  project       Project?        @relation(fields: [project_id], references: [id])
+  assignee      users?           @relation("assigned_tasks", fields: [assignee_id], references: [id])
+  creator       users            @relation("created_tasks", fields: [created_by], references: [id])
+  project       project?         @relation(fields: [project_id], references: [id])
   attachments   TaskAttachment[]
   comments      TaskComment[]
   time_entries  TimeEntry[]
 }
 
-model TaskAttachment {
+model task_attachment {
   id           String   @id @default(uuid())
   task_id      String
   file_name    String
@@ -115,11 +114,11 @@ model TaskAttachment {
   uploaded_at  DateTime @default(now())
 
   // Relations
-  task      Task @relation(fields: [task_id], references: [id])
-  uploader  User @relation(fields: [uploaded_by], references: [id])
+  task      task @relation(fields: [task_id], references: [id])
+  uploader  users @relation(fields: [uploaded_by], references: [id])
 }
 
-model TaskComment {
+model task_comment {
   id        String   @id @default(uuid())
   task_id   String
   content   String
@@ -128,11 +127,11 @@ model TaskComment {
   updated_at DateTime @updatedAt
 
   // Relations
-  task   Task  @relation(fields: [task_id], references: [id])
-  author User  @relation(fields: [author_id], references: [id])
+  task   task  @relation(fields: [task_id], references: [id])
+  author users @relation(fields: [author_id], references: [id])
 }
 
-model TimeEntry {
+model time_entry {
   id          String    @id @default(uuid())
   task_id     String
   user_id     String
@@ -144,8 +143,8 @@ model TimeEntry {
   updated_at  DateTime  @updatedAt
 
   // Relations
-  task Task @relation(fields: [task_id], references: [id])
-  user User @relation(fields: [user_id], references: [id])
+  task task @relation(fields: [task_id], references: [id])
+  user users @relation(fields: [user_id], references: [id])
 }
 
 enum TaskStatus {
@@ -181,4 +180,4 @@ enum InviteStatus {
   ACCEPTED
   DECLINED
   EXPIRED
-}
+} 

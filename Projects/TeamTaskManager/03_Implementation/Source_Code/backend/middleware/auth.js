@@ -16,20 +16,21 @@ const protect = async (req, res, next) => {
         throw new Error('JWT_SECRET not defined');
       }
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      const user = await prisma.users.findUnique({
+      const user = await prisma.User.findUnique({
         where: { id: decoded.id },
       });
       if (user) {
         req.user = user;
+        next();
+      } else {
+        res.status(401).json({ message: 'User not found' });
       }
-      next();
     } catch (error) {
-      // if token is expired or invalid, we still want to continue to the next middleware
-      // so that unauthenticated users can still access public routes
-      next();
+      console.error('Auth error:', error);
+      res.status(401).json({ message: 'Invalid token' });
     }
   } else {
-    next();
+    res.status(401).json({ message: 'No token provided' });
   }
 };
 

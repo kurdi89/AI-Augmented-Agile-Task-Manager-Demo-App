@@ -1,15 +1,22 @@
 {
-  "name": "frontend",
+  "name": "team-task-manager-frontend",
   "version": "0.1.0",
+  "description": "Frontend application for Team Task Manager with real-time collaboration",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
+    "@radix-ui/react-dialog": "^1.1.14",
     "@radix-ui/react-label": "^2.1.7",
+    "@radix-ui/react-select": "^2.2.5",
     "@radix-ui/react-slot": "^1.2.3",
     "axios": "^1.10.0",
     "class-variance-authority": "^0.7.1",
