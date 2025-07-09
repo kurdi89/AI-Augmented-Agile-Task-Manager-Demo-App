@@ -39,8 +39,10 @@ const handleUpload = async (taskId: string) => {
 
   return (
     <div>
-      <input type="file" onChange={handleFileChange} />
-      <input type="text" placeholder="Task ID" onChange={(e) => setTaskId(e.target.value)} />
+      <label htmlFor="file-upload">Upload File</label>
+      <input id="file-upload" type="file" onChange={handleFileChange} />
+      <label htmlFor="task-id">Task ID</label>
+      <input id="task-id" type="text" placeholder="Task ID" onChange={(e) => setTaskId(e.target.value)} />
       <button onClick={() => handleUpload(taskId)} disabled={!file || !taskId || uploading}>
         {uploading ? 'Uploading...' : 'Upload'}
       </button>
