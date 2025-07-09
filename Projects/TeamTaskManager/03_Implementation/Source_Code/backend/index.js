@@ -253,6 +253,88 @@ app.post('/api/projects', protect, async (req, res) => {
   }
 });
 
+app.put('/api/projects/:id', protect, async (req, res) => {
+  try {
+    const { name, description, status, startDate, endDate, tags } = req.body;
+    
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({ message: 'User not authenticated' });
+    }
+
+    // Check if user owns the project
+    const existingProject = await prisma.Project.findUnique({
+      where: { id: req.params.id }
+    });
+
+    if (!existingProject) {
+      return res.status(404).json({ message: 'Project not found' });
+    }
+
+    if (existingProject.owner_id !== req.user.id) {
+      return res.status(403).json({ message: 'Not authorized to update this project' });
+    }
+
+    const updateData = {};
+    if (name !== undefined) updateData.name = name;
+    if (description !== undefined) updateData.description = description;
+    if (status !== undefined) updateData.status = status;
+    if (startDate !== undefined) updateData.start_date = new Date(startDate);
+    if (endDate !== undefined) updateData.end_date = new Date(endDate);
+    if (tags !== undefined) updateData.tags = JSON.stringify(tags);
+
+    const project = await prisma.Project.update({
+      where: { id: req.params.id },
+      data: updateData,
+      include: {
+        owner: true,
+        members: {
+          include: {
+            user: true
+          }
+        },
+        tasks: true
+      }
+    });
+
+    io.emit('project:updated', project);
+    res.json(project);
+  } catch (error) {
+    console.error('Project update error:', error);
+    res.status(500).json({ message: 'Failed to update project' });
+  }
+});
+
+app.delete('/api/projects/:id', protect, async (req, res) => {
+  try {
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({ message: 'User not authenticated' });
+    }
+
+    // Check if user owns the project
+    const existingProject = await prisma.Project.findUnique({
+      where: { id: req.params.id }
+    });
+
+    if (!existingProject) {
+      return res.status(404).json({ message: 'Project not found' });
+    }
+
+    if (existingProject.owner_id !== req.user.id) {
+      return res.status(403).json({ message: 'Not authorized to delete this project' });
+    }
+
+    await prisma.Project.delete({
+      where: { id: req.params.id },
+    });
+
+    io.emit('project:deleted', { id: req.params.id });
+    res.status(204).send();
+  } catch (error) {
+    console.error('Project deletion error:', error);
+    res.status(500).json({ message: 'Failed to delete project' });
+  }
+});
+
 app.post('/api/tasks', protect, async (req, res) => {
   try {
     const { title, description, projectId } = req.body;

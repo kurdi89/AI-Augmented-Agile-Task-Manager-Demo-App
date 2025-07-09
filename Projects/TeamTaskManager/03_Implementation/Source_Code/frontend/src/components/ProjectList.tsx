@@ -4,7 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { Project, ProjectStatus, ProjectRole, ProjectFilters, CreateProjectForm } from '@/lib/types';
 import apiClient from '@/lib/api';
 import { socket } from '@/lib/socket';
-import { Plus, Search, Filter, Edit, Trash2, Eye, Users, Calendar } from 'lucide-react';
+import { Plus, Search, Filter, Edit, Trash2, Eye, Users, Calendar, CheckCircle } from 'lucide-react';
+import Link from 'next/link';
 
 interface ProjectListProps {
   showCreateButton?: boolean;
@@ -15,6 +16,21 @@ const ProjectList: React.FC<ProjectListProps> = ({
   showCreateButton = true, 
   onProjectSelect 
 }) => {
+  // Helper function to ensure tags is always an array
+  const parseTags = (tags: any): string[] => {
+    if (!tags) return [];
+    if (Array.isArray(tags)) return tags;
+    if (typeof tags === 'string') {
+      try {
+        const parsed = JSON.parse(tags);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch {
+        return [];
+      }
+    }
+    return [];
+  };
+
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -274,6 +290,13 @@ const ProjectList: React.FC<ProjectListProps> = ({
                     <Eye size={14} />
                   </button>
                 )}
+                <Link href={`/projects/${project.id}/tasks`}>
+                  <button
+                    className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded"
+                  >
+                    <CheckCircle size={14} />
+                  </button>
+                </Link>
                 <button
                   onClick={() => setEditingProject(project)}
                   className="p-1 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded"
@@ -304,23 +327,26 @@ const ProjectList: React.FC<ProjectListProps> = ({
               </div>
             </div>
             
-            {project.tags && project.tags.length > 0 && (
-              <div className="flex flex-wrap gap-1 mb-3">
-                {project.tags.slice(0, 3).map((tag, index) => (
-                  <span
-                    key={index}
-                    className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded"
-                  >
-                    {tag}
-                  </span>
-                ))}
-                {project.tags.length > 3 && (
-                  <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded">
-                    +{project.tags.length - 3} more
-                  </span>
-                )}
-              </div>
-            )}
+            {(() => {
+              const parsedTags = parseTags(project.tags);
+              return parsedTags.length > 0 && (
+                <div className="flex flex-wrap gap-1 mb-3">
+                  {parsedTags.slice(0, 3).map((tag, index) => (
+                    <span
+                      key={index}
+                      className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                  {parsedTags.length > 3 && (
+                    <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded">
+                      +{parsedTags.length - 3} more
+                    </span>
+                  )}
+                </div>
+              );
+            })()}
             
             <div className="text-xs text-gray-500">
               Created: {new Date(project.createdAt).toLocaleDateString()}
@@ -387,12 +413,27 @@ interface ProjectFormProps {
 }
 
 const ProjectForm: React.FC<ProjectFormProps> = ({ project, onSubmit, onCancel }) => {
+  // Helper function to ensure tags is always an array
+  const parseTags = (tags: any): string[] => {
+    if (!tags) return [];
+    if (Array.isArray(tags)) return tags;
+    if (typeof tags === 'string') {
+      try {
+        const parsed = JSON.parse(tags);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch {
+        return [];
+      }
+    }
+    return [];
+  };
+
   const [formData, setFormData] = useState<CreateProjectForm>({
     name: project?.name || '',
     description: project?.description || '',
     startDate: project?.startDate ? new Date(project.startDate).toISOString().split('T')[0] : '',
     endDate: project?.endDate ? new Date(project.endDate).toISOString().split('T')[0] : '',
-    tags: project?.tags || [],
+    tags: parseTags(project?.tags),
   });
   const [tagInput, setTagInput] = useState('');
 

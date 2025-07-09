@@ -353,7 +353,7 @@ export const useOptimizedProjectSearch = (projects: Project[], query: string) =>
         project.name.toLowerCase().includes(searchLower) ||
         project.description?.toLowerCase().includes(searchLower) ||
         project.status.toLowerCase().includes(searchLower) ||
-        project.tags.some(tag => tag.toLowerCase().includes(searchLower))
+        (Array.isArray(project.tags) && project.tags.some(tag => tag.toLowerCase().includes(searchLower)))
       );
     },
     query

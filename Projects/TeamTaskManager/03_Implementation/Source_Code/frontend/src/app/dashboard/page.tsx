@@ -5,6 +5,7 @@ import { socket } from '@/lib/socket';
 import { Task, Project, DashboardStats, CreateTaskForm, CreateProjectForm } from '@/lib/types';
 import ProjectList from '@/components/ProjectList';
 import TaskList from '@/components/TaskList';
+import KanbanBoard from '@/components/KanbanBoard';
 import TaskCreationForm from '@/components/TaskCreationForm';
 import ProjectCreationForm from '@/components/ProjectCreationForm';
 import FileUpload from '@/components/FileUpload';
@@ -517,7 +518,7 @@ const DashboardPage = () => {
               </button>
             </div>
             
-            <TaskList 
+            <KanbanBoard 
               showCreateButton={false}
               onTaskSelect={(task) => {
                 console.log('Task selected:', task);
