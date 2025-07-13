@@ -276,6 +276,7 @@ frontend/src/
 - **File Upload**: Attachment system complete for task attachments
 - **Performance Optimization**: Caching and lazy loading implemented
 - **Real-time Features**: WebSocket integration complete
+- **Inline Comments**: Detailed inline comments added to 'upload.js' file
 
 ### 🟢 **LOW PRIORITY**
 - **Documentation**: API documentation for external developers
